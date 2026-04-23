@@ -132,9 +132,23 @@ fun RegistroScreen(viewModel: FallaViewModel, nav: NavController) {
         Spacer(modifier = Modifier.height(12.dp))
 
         OutlinedTextField(
+            // Numero de inventario
             value = viewModel.numeroInventario.value,
-            onValueChange = { viewModel.numeroInventario.value = it },
+            // Cuando el valor cambia
+            onValueChange = { viewModel.numeroInventario.value = it
+                            viewModel.errorInventario.value = null},
+            // Etiqueta
             label = { Text("Número de inventario") },
+            // Si hay error
+            isError = viewModel.errorInventario.value != null,
+            // Mensaje de error
+            supportingText = {
+                // Si hay error
+                if (viewModel.errorInventario.value != null) {
+                    // Mensaje de error
+                    Text(viewModel.errorInventario.value!!)
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp)
         )
@@ -143,8 +157,15 @@ fun RegistroScreen(viewModel: FallaViewModel, nav: NavController) {
 
         OutlinedTextField(
             value = viewModel.ubicacion.value,
-            onValueChange = { viewModel.ubicacion.value = it },
+            onValueChange = { viewModel.ubicacion.value = it
+                            viewModel.errorUbicacion.value = null },
             label = { Text("Ubicación") },
+            isError = viewModel.errorUbicacion.value != null,
+            supportingText = {
+                if (viewModel.errorUbicacion.value != null) {
+                    Text(viewModel.errorUbicacion.value!!)
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp)
         )
@@ -153,8 +174,15 @@ fun RegistroScreen(viewModel: FallaViewModel, nav: NavController) {
 
         OutlinedTextField(
             value = viewModel.descripcion.value,
-            onValueChange = { viewModel.descripcion.value = it },
+            onValueChange = { viewModel.descripcion.value = it
+                            viewModel.errorDescripcion.value = null },
             label = { Text("Descripción") },
+            isError = viewModel.errorDescripcion.value != null,
+            supportingText = {
+                if (viewModel.errorDescripcion.value != null) {
+                    Text(viewModel.errorDescripcion.value!!)
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
             maxLines = 4
@@ -186,8 +214,10 @@ fun RegistroScreen(viewModel: FallaViewModel, nav: NavController) {
 
         Button(
             onClick = {
-                viewModel.guardar()
-                nav.navigate("lista")
+                val guardado = viewModel.guardar()
+                if (guardado){
+                    nav.navigate("lista")
+                }
             },
             modifier = Modifier
                 .fillMaxWidth(),

@@ -21,14 +21,55 @@ class FallaViewModel(private val repo: FallaRepository) : ViewModel() {
     var descripcion = mutableStateOf("")
     // Uri de la foto de la falla
     var fotoUri = mutableStateOf("")
+    // Errores de validacion
+    var errorInventario = mutableStateOf<String?>(null)
+    var errorUbicacion = mutableStateOf<String?>(null)
+    var errorDescripcion = mutableStateOf<String?>(null)
     // Lista de fallas
     val fallas = repo.obtenerFallas().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         emptyList()
     )
-    // Guarda una falla en la base de datos
-    fun guardar() {
+
+    /**
+     * Valida los campos de la pantalla
+     * @return True si los campos son validos, false en caso contrario
+     */
+    fun validar(): Boolean {
+        // Valida los campos
+        var esValido = true
+        // Valida el numero de inventario
+        if (numeroInventario.value.isBlank()) {
+            errorInventario.value = "Ingresa el numero de inventario"
+            esValido = false
+        } else {
+            errorInventario.value = null
+        }
+        // Valida la ubicacion
+        if (ubicacion.value.isBlank()) {
+            errorUbicacion.value = "Ingresa la ubicacion"
+            esValido = false
+        } else {
+            errorUbicacion.value = null
+        }
+        // Valida la descripcion
+        if (descripcion.value.isBlank()) {
+            errorDescripcion.value = "Ingresa la descripcion de la falla"
+            esValido = false
+        } else {
+            errorDescripcion.value = null
+        }
+        // Valida la foto
+        return esValido
+    }
+    /**
+     * Guarda una falla en la base de datos
+     * @return True si la falla se guardo correctamente, false en caso contrario
+     */
+    fun guardar() : Boolean{
+        // Valida los campos
+        if (!validar()) return false
         // Falla a guardar
         val falla = Falla(
             numeroInventario = numeroInventario.value,
@@ -40,5 +81,23 @@ class FallaViewModel(private val repo: FallaRepository) : ViewModel() {
         viewModelScope.launch {
             repo.guardar(falla)
         }
+        // Limpia los campos
+        limpiarCampo()
+        return true
     }
+
+    /**
+     * Limpia los campos de la pantalla
+     */
+    fun limpiarCampo(){
+        numeroInventario.value = ""
+        ubicacion.value = ""
+        descripcion.value = ""
+        fotoUri.value = ""
+        errorInventario.value = null
+        errorUbicacion.value = null
+        errorDescripcion.value = null
+    }
+
+
 }
