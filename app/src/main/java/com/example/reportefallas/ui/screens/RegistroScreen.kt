@@ -1,5 +1,6 @@
 package com.example.reportefallas.ui.screens
 
+import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +46,9 @@ fun RegistroScreen(viewModel: FallaViewModel, nav: NavController) {
     val imageFile = remember {
         // Ruta de la imagen
         File(
+            // Directorio de la aplicación
             context.cacheDir,
+            // Nombre del archivo
             "foto_${System.currentTimeMillis()}.jpg"
         )
     }
@@ -53,8 +56,11 @@ fun RegistroScreen(viewModel: FallaViewModel, nav: NavController) {
     val uri = remember {
         // Uri de la imagen
         FileProvider.getUriForFile(
+            // Contexto de la aplicación
             context,
+            // Autoridad del proveedor de archivos
             "${context.packageName}.provider",
+            // Archivo de imagen
             imageFile
         )
     }
@@ -62,16 +68,26 @@ fun RegistroScreen(viewModel: FallaViewModel, nav: NavController) {
     // Launcher para la camarra
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
-    ) { success ->
+    ) { // Si la foto se tomó correctamente
+        success ->
         if (success) {
+            // Uri de la imagen
             viewModel.fotoUri.value = uri.toString()
         }
     }
     // Launcher para la galería
     val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { selectedUri ->
-        selectedUri?.let {
+        contract = ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        // Si la uri no es nula
+        uri?.let {
+
+            // Permisos de lectura
+            context.contentResolver.takePersistableUriPermission(
+                it,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            // Uri de la imagen
             viewModel.fotoUri.value = it.toString()
         }
     }
@@ -158,7 +174,7 @@ fun RegistroScreen(viewModel: FallaViewModel, nav: NavController) {
             }
 
             OutlinedButton(
-                onClick = { galleryLauncher.launch("image/*") },
+                onClick = { galleryLauncher.launch(arrayOf("image/*")) },
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(12.dp)
             ) {
