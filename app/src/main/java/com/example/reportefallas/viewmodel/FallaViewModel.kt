@@ -5,14 +5,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.reportefallas.data.local.entidades.Falla
 import com.example.reportefallas.data.repositorios.FallaRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 /**
- * ViewModel de la aplicación
+ * ViewModel de la pantalla de registro de fallas
  * @param repo El repositorio de fallas
+ * @constructor Crea un nuevo ViewModel de registro de fallas
  */
-class FallaViewModel(private val repo: FallaRepository) : ViewModel() {
+@HiltViewModel
+class FallaViewModel @Inject constructor(private val repo: FallaRepository) : ViewModel() {
     // Numero de inventario de la falla
     var numeroInventario = mutableStateOf("")
     // Ubicacion de la falla

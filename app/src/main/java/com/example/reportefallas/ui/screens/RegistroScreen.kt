@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.reportefallas.viewmodel.FallaViewModel
@@ -39,7 +40,7 @@ import java.io.File
  * @param nav El controlador de navegación
  */
 @Composable
-fun RegistroScreen(viewModel: FallaViewModel, nav: NavController) {
+fun RegistroScreen(viewModel: FallaViewModel = hiltViewModel(), nav: NavController) {
     // Contexto de la aplicación
     val context = LocalContext.current
     // Archivo de imagen

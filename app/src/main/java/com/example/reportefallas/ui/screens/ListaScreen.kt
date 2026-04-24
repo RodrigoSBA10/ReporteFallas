@@ -24,17 +24,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.reportefallas.viewmodel.FallaViewModel
 
 /**
- * Lista de fallas
+ * Pantalla de lista de fallas
  * @param viewModel El viewModel de la aplicación
  * @param nav El controlador de navegación
  */
 @Composable
-fun ListaScreen(viewModel: FallaViewModel, nav: NavController) {
+fun ListaScreen( viewModel: FallaViewModel = hiltViewModel(), nav: NavController) {
     // Lista de fallas
     val lista by viewModel.fallas.collectAsState()
 

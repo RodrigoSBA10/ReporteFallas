@@ -1,6 +1,7 @@
 package com.example.reportefallas.ui.navegacion
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.*
 import androidx.navigation.compose.rememberNavController
 import com.example.reportefallas.ui.screens.ListaScreen
@@ -12,7 +13,7 @@ import com.example.reportefallas.viewmodel.FallaViewModel
  * @param viewModel El viewModel de la aplicación
  */
 @Composable
-fun Nav(viewModel: FallaViewModel) {
+fun Nav() {
     // Controlador de navegación
     val navController = rememberNavController()
     /**
@@ -26,11 +27,11 @@ fun Nav(viewModel: FallaViewModel) {
          * @param route La ruta de la pantalla
          */
         composable("lista") {
-            ListaScreen(viewModel, navController)
+            ListaScreen(nav = navController)
         }
 
         composable("registro") {
-            RegistroScreen(viewModel, navController)
+            RegistroScreen(nav = navController)
         }
     }
 }
