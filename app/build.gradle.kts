@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.reportefallas"
-    compileSdk = 35 // Simplified from release(36)
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.reportefallas"
@@ -34,9 +34,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinOptions {
-        jvmTarget = "11"
-    }
+
 
     buildFeatures {
         compose = true
@@ -76,4 +74,8 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // hilt
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    ksp("com.google.dagger:hilt-android-compiler:2.51.1")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 }

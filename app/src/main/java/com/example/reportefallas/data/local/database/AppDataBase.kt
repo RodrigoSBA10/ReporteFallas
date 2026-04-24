@@ -8,7 +8,7 @@ import com.example.reportefallas.data.local.entidades.Falla
 /**
  * Base de datos de la aplicación
  */
-@Database(entities = [Falla::class], version = 1)
+@Database(entities = [Falla::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     /**
      * Dao para operaciones con la tabla de fallas
