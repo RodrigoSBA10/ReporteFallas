@@ -21,6 +21,8 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +45,14 @@ import java.io.File
 fun RegistroScreen(viewModel: FallaViewModel = hiltViewModel(), nav: NavController) {
     // Contexto de la aplicación
     val context = LocalContext.current
+    // Estados del viewModel
+    val numeroInventario by viewModel.numeroInventario.collectAsState()
+    val ubicacion by viewModel.ubicacion.collectAsState()
+    val descripcion by viewModel.descripcion.collectAsState()
+    val fotoUri by viewModel.fotoUri.collectAsState()
+    val errorInventario by viewModel.errorInventario.collectAsState()
+    val errorUbicacion by viewModel.errorUbicacion.collectAsState()
+    val errorDescripcion by viewModel.errorDescripcion.collectAsState()
     // Archivo de imagen
     val imageFile = remember {
         // Ruta de la imagen
@@ -73,7 +83,7 @@ fun RegistroScreen(viewModel: FallaViewModel = hiltViewModel(), nav: NavControll
         success ->
         if (success) {
             // Uri de la imagen
-            viewModel.fotoUri.value = uri.toString()
+            viewModel.actualizarFotoUri(uri.toString())
         }
     }
     // Launcher para la galería
@@ -89,7 +99,7 @@ fun RegistroScreen(viewModel: FallaViewModel = hiltViewModel(), nav: NavControll
                 Intent.FLAG_GRANT_READ_URI_PERMISSION
             )
             // Uri de la imagen
-            viewModel.fotoUri.value = it.toString()
+            viewModel.actualizarFotoUri(it.toString())
         }
     }
 
@@ -113,9 +123,9 @@ fun RegistroScreen(viewModel: FallaViewModel = hiltViewModel(), nav: NavControll
                 .height(180.dp),
             elevation = CardDefaults.cardElevation(4.dp)
         ) {
-            if (viewModel.fotoUri.value.isNotEmpty()) {
+            if (fotoUri.isNotEmpty()) {
                 AsyncImage(
-                    model = viewModel.fotoUri.value,
+                    model = fotoUri,
                     contentDescription = "Vista previa",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -134,20 +144,19 @@ fun RegistroScreen(viewModel: FallaViewModel = hiltViewModel(), nav: NavControll
 
         OutlinedTextField(
             // Numero de inventario
-            value = viewModel.numeroInventario.value,
+            value = numeroInventario,
             // Cuando el valor cambia
-            onValueChange = { viewModel.numeroInventario.value = it
-                            viewModel.errorInventario.value = null},
+            onValueChange = { viewModel.actualizarNumeroInventario(it) },
             // Etiqueta
             label = { Text("Número de inventario") },
             // Si hay error
-            isError = viewModel.errorInventario.value != null,
+            isError = errorInventario != null,
             // Mensaje de error
             supportingText = {
                 // Si hay error
-                if (viewModel.errorInventario.value != null) {
+                if (errorInventario != null) {
                     // Mensaje de error
-                    Text(viewModel.errorInventario.value!!)
+                    Text(errorInventario!!)
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -157,14 +166,13 @@ fun RegistroScreen(viewModel: FallaViewModel = hiltViewModel(), nav: NavControll
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = viewModel.ubicacion.value,
-            onValueChange = { viewModel.ubicacion.value = it
-                            viewModel.errorUbicacion.value = null },
+            value = ubicacion,
+            onValueChange = { viewModel.actualizarUbicacion(it)},
             label = { Text("Ubicación") },
-            isError = viewModel.errorUbicacion.value != null,
+            isError = errorUbicacion != null,
             supportingText = {
-                if (viewModel.errorUbicacion.value != null) {
-                    Text(viewModel.errorUbicacion.value!!)
+                if (errorUbicacion != null) {
+                    Text(errorUbicacion!!)
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -174,14 +182,13 @@ fun RegistroScreen(viewModel: FallaViewModel = hiltViewModel(), nav: NavControll
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
-            value = viewModel.descripcion.value,
-            onValueChange = { viewModel.descripcion.value = it
-                            viewModel.errorDescripcion.value = null },
+            value = descripcion,
+            onValueChange = { viewModel.actualizarDescripcion(it) },
             label = { Text("Descripción") },
-            isError = viewModel.errorDescripcion.value != null,
+            isError = errorDescripcion != null,
             supportingText = {
-                if (viewModel.errorDescripcion.value != null) {
-                    Text(viewModel.errorDescripcion.value!!)
+                if (errorDescripcion != null) {
+                    Text(errorDescripcion!!)
                 }
             },
             modifier = Modifier.fillMaxWidth(),
